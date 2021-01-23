@@ -19,6 +19,15 @@ namespace TwitchFX.Commands {
 			Color leftColor = ParseColor(args[0]);
 			Color rightColor = ParseColor(args[1]);
 			
+			Color diff = leftColor - rightColor;
+			float mag = Mathf.Abs(diff.r) + Mathf.Abs(diff.g) + Mathf.Abs(diff.b);
+
+			if ( mag < 0.2f )
+			{
+				Plugin.chat.Send("Someone tried to be funny and set the note colors the same");
+				return;
+			}
+
 			float? duration = TryParseFloat(args, 2);
 			
 			ColorController.instance.SetNoteColors(leftColor, rightColor, duration);
