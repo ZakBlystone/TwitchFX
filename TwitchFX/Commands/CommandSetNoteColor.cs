@@ -18,11 +18,15 @@ namespace TwitchFX.Commands {
 			
 			Color leftColor = ParseColor(args[0]);
 			Color rightColor = ParseColor(args[1]);
-			
+			bool rainbow = false;
+			if (Helper.IsRainbow(leftColor) || Helper.IsRainbow(rightColor))
+			{
+				rainbow = true;
+			}
 			Color diff = leftColor - rightColor;
 			float mag = Mathf.Abs(diff.r) + Mathf.Abs(diff.g) + Mathf.Abs(diff.b);
-
-			if ( mag < 0.2f )
+			
+			if ( mag < 0.2f && !rainbow)
 			{
 				Plugin.chat.Send("Someone tried to be funny and set the note colors the same");
 				return;

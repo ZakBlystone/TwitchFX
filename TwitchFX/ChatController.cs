@@ -6,7 +6,10 @@ using ChatCore.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using TwitchFX.Commands;
+using UnityEngine;
 using MonoBehavior = UnityEngine.MonoBehaviour;
 
 namespace TwitchFX {
@@ -19,6 +22,7 @@ namespace TwitchFX {
 		
 		private CommandData? queuedCommand = null;
 		private Queue<CommandData> queuedCommands = new Queue<CommandData>();
+
 		
 		public void Awake() {
 			
@@ -33,13 +37,25 @@ namespace TwitchFX {
 			enabled = false;
 			
 		}
-		
 		private void OnMessage(IChatService service, IChatMessage message) {
-			
+			TwitchUser twitchUser = message.Sender.AsTwitchUser();
+			if (message.Message.ToLower() == "whanos power")
+			{
+				if (twitchUser.DisplayName.ToLower() == "whanostv" || twitchUser.DisplayName.ToLower() == "kazditi" ||
+				    twitchUser.DisplayName.ToLower() == "nemesis_n1")
+				{
+					Plugin.funniesEnabled = true;
+				}
+			}
+			if (message.Message.ToLower() == "baba booey")
+			{
+				if (twitchUser.DisplayName.ToLower() == "whanostv" || twitchUser.DisplayName.ToLower() == "kazditi" ||
+				    twitchUser.DisplayName.ToLower() == "nemesis_n1")
+				{
+					
+				}
+			}
 			if (message.Message.StartsWith("!")) {
-				
-				TwitchUser twitchUser = message.Sender.AsTwitchUser();
-				
 				if (message.Message.ToLower().Equals("!tfx"))
 					Send("TwitchFX v" + Plugin.instance.version + (Plugin.config.allowRaksoPermissionsOverride ? "+" : ""));
 				
@@ -119,7 +135,6 @@ namespace TwitchFX {
 		}
 		
 		public void LateUpdate() {
-			
 			lock (queuedCommands) {
 				
 				if (queuedCommand.HasValue) {

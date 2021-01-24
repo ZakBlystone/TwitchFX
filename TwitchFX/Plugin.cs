@@ -15,6 +15,8 @@ using TwitchFX.Colors;
 using TwitchFX.Commands;
 using TwitchFX.Hooking;
 using UnityEngine;
+using Random = System.Random;
+
 //using BS_Utils.Gameplay;
 
 namespace TwitchFX {
@@ -32,7 +34,13 @@ namespace TwitchFX {
 		
 		public bool enabled = true;
 		public bool inLevel = false;
-		
+		private Random random = new Random();
+
+		//random funnies
+		public static int menuCount = 0;
+		public static bool funniesEnabled = false;
+
+
 		private Assembly assembly;
 		
 		[Init]
@@ -73,14 +81,42 @@ namespace TwitchFX {
 		}
 		
 		[OnStart]
-		public void OnStart() {
-			
+		public void OnStart()
+		{
+			SceneManager.activeSceneChanged += SceneManagerOnactiveSceneChanged;
+
 			chat = new GameObject("TwitchFXChat").AddComponent<ChatController>();
-			
+            			
 			SetUpHooks();
+			InitialiseFunny();
 			
 			LoadColorPresets(UnityGame.UserDataPath + "\\TwitchFX\\ColorPresets");
 			LoadLightshows(UnityGame.UserDataPath + "\\TwitchFX\\Lightshows");
+			
+		}
+		private void SceneManagerOnactiveSceneChanged(Scene arg0, Scene arg1)
+		{
+			if (arg1.name.Contains("Menu") && funniesEnabled) // Only run in menu scene
+			{
+				menuCount++;
+				if (menuCount >= 10 && (random.Next(0, 10) >= 5))
+				{
+					if (random.Next(0, 100) >= 80)
+					{
+						string[] wanos = {"WHANOS", "POWER"};
+						MenuText.setText(wanos);
+					}
+					else
+					{
+						MenuText.setText(MenuText.SUDO);
+					}
+					menuCount = 0;
+				}
+			}
+		}
+
+		private void InitialiseFunny()
+		{
 			
 		}
 		

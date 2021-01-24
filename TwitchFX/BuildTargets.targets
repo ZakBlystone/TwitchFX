@@ -29,21 +29,6 @@
     <Message Text="PluginVersion: $(PluginVersion), AssemblyVersion: $(AssemblyVersion), GameVersion: $(GameVersion)" Importance="high" />
     <ZipDir DirectoryName="$(IntermediateOutputPath)zip" ZipFileName="$(OutDir)$(AssemblyName)-v$(PluginVersion).zip" />
   </Target>
-  <Target Name="CopyToPlugins" AfterTargets="Build" Condition="'$(DisableCopyToPlugins)' != 'True'">
-    <Error Text="Unable to copy assembly to game folder. BeatSaberDir doesn't exist: $(BeatSaberDir)" Condition="!Exists($(BeatSaberDir))"/>
-    <IsProcessRunning ProcessName="Beat Saber">
-      <Output TaskParameter="IsRunning" PropertyName="IsRunning" />
-    </IsProcessRunning>
-    <PropertyGroup Condition="'$(IsRunning)' == 'True'">
-      <PluginDir>$(BeatSaberDir)\IPA\Pending\Plugins</PluginDir>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(IsRunning)' == 'False'">
-      <PluginDir>$(BeatSaberDir)\Plugins</PluginDir>
-    </PropertyGroup>
-    <Message Text="Copying $(OutputPath)$(AssemblyName).dll to $(PluginDir)" Importance="high" />
-    <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFiles="$(PluginDir)\$(AssemblyName).dll" />
-    <Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb" DestinationFiles="$(PluginDir)\$(AssemblyName).pdb" />
-  </Target>
   <!--Build Tasks-->
   <UsingTask TaskName="GetManifestInfo" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll">
     <ParameterGroup>
